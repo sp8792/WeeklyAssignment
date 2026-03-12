@@ -1,42 +1,39 @@
 import java.util.*;
 
-public class  Main {
+public class Main {
 
-    static HashMap<String,Integer> users = new HashMap<>();
-    static HashMap<String,Integer> attempts = new HashMap<>();
+    static HashMap<String,Integer> stock = new HashMap<>();
+    static Queue<Integer> waitingList = new LinkedList<>();
 
     public static void main(String[] args){
 
-        users.put("manish",1);
-        users.put("admin",2);
-        users.put("alice",3);
+        stock.put("IPHONE15",5);
 
-        Scanner sc = new Scanner(System.in);
-
-        System.out.print("Enter username: ");
-        String username = sc.nextLine();
-
-        attempts.put(username, attempts.getOrDefault(username,0)+1);
-
-        if(users.containsKey(username)){
-            System.out.println("Username already taken");
-            suggest(username);
-        }
-        else{
-            System.out.println("Username available");
-        }
-
-        sc.close();
+        purchaseItem("IPHONE15",101);
+        purchaseItem("IPHONE15",102);
+        purchaseItem("IPHONE15",103);
+        purchaseItem("IPHONE15",104);
+        purchaseItem("IPHONE15",105);
+        purchaseItem("IPHONE15",106);
     }
 
-    static void suggest(String username){
+    static void purchaseItem(String productId,int userId){
 
-        System.out.println("Suggestions:");
+        int currentStock = stock.getOrDefault(productId,0);
 
-        for(int i=1;i<=3;i++){
-            System.out.println(username+i);
+        if(currentStock>0){
+
+            stock.put(productId,currentStock-1);
+
+            System.out.println("Purchase successful by user "+userId+
+                    ". Remaining: "+(currentStock-1));
+
+        }else{
+
+            waitingList.add(userId);
+
+            System.out.println("Out of stock. User "+userId+
+                    " added to waiting list.");
         }
-
-        System.out.println(username.replace("_","."));
     }
 }
