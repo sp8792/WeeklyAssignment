@@ -1,39 +1,53 @@
 import java.util.*;
 
-public class Main {
+class DNSEntry{
 
-    static HashMap<String,Integer> stock = new HashMap<>();
-    static Queue<Integer> waitingList = new LinkedList<>();
+    String ip;
+    long expiry;
+
+    DNSEntry(String ip,long ttl){
+
+        this.ip = ip;
+        this.expiry = System.currentTimeMillis()+ttl;
+    }
+
+    boolean expired(){
+        return System.currentTimeMillis()>expiry;
+    }
+}
+
+public class Main{
+
+    static HashMap<String,DNSEntry> cache = new HashMap<>();
 
     public static void main(String[] args){
 
-        stock.put("IPHONE15",5);
+        cache.put("google.com",new DNSEntry("142.250.183.14",5000));
 
-        purchaseItem("IPHONE15",101);
-        purchaseItem("IPHONE15",102);
-        purchaseItem("IPHONE15",103);
-        purchaseItem("IPHONE15",104);
-        purchaseItem("IPHONE15",105);
-        purchaseItem("IPHONE15",106);
+        resolve("google.com");
+
+        try{
+            Thread.sleep(6000);
+        }catch(Exception e){}
+
+        resolve("google.com");
     }
 
-    static void purchaseItem(String productId,int userId){
+    static void resolve(String domain){
 
-        int currentStock = stock.getOrDefault(productId,0);
+        if(cache.containsKey(domain)){
 
-        if(currentStock>0){
+            DNSEntry entry = cache.get(domain);
 
-            stock.put(productId,currentStock-1);
+            if(!entry.expired()){
+                System.out.println("Cache HIT → "+entry.ip);
+                return;
+            }
 
-            System.out.println("Purchase successful by user "+userId+
-                    ". Remaining: "+(currentStock-1));
-
-        }else{
-
-            waitingList.add(userId);
-
-            System.out.println("Out of stock. User "+userId+
-                    " added to waiting list.");
+            System.out.println("Cache EXPIRED");
+            cache.remove(domain);
         }
+
+        System.out.println("Cache MISS → Query DNS");
     }
 }
