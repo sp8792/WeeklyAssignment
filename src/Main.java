@@ -1,53 +1,37 @@
 import java.util.*;
 
-class DNSEntry{
-
-    String ip;
-    long expiry;
-
-    DNSEntry(String ip,long ttl){
-
-        this.ip = ip;
-        this.expiry = System.currentTimeMillis()+ttl;
-    }
-
-    boolean expired(){
-        return System.currentTimeMillis()>expiry;
-    }
-}
-
-public class Main{
-
-    static HashMap<String,DNSEntry> cache = new HashMap<>();
+public class Main
+{
 
     public static void main(String[] args){
 
-        cache.put("google.com",new DNSEntry("142.250.183.14",5000));
+        String doc1="machine learning models are powerful";
+        String doc2="machine learning models are widely used";
 
-        resolve("google.com");
+        Set<String> ngrams1 = generateNgrams(doc1,2);
+        Set<String> ngrams2 = generateNgrams(doc2,2);
 
-        try{
-            Thread.sleep(6000);
-        }catch(Exception e){}
+        ngrams1.retainAll(ngrams2);
 
-        resolve("google.com");
+        System.out.println("Matching ngrams: "+ngrams1.size());
     }
 
-    static void resolve(String domain){
+    static Set<String> generateNgrams(String text,int n){
 
-        if(cache.containsKey(domain)){
+        String[] words = text.split(" ");
+        Set<String> set = new HashSet<>();
 
-            DNSEntry entry = cache.get(domain);
+        for(int i=0;i<=words.length-n;i++){
 
-            if(!entry.expired()){
-                System.out.println("Cache HIT → "+entry.ip);
-                return;
+            String gram = "";
+
+            for(int j=0;j<n;j++){
+                gram += words[i+j]+" ";
             }
 
-            System.out.println("Cache EXPIRED");
-            cache.remove(domain);
+            set.add(gram.trim());
         }
 
-        System.out.println("Cache MISS → Query DNS");
+        return set;
     }
 }
