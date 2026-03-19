@@ -2,28 +2,33 @@ import java.util.*;
 
 public class Main {
 
+    static HashMap<String,String> L1 = new HashMap<>();
+    static HashMap<String,String> L2 = new HashMap<>();
+
     public static void main(String[] args){
 
-        int[] transactions = {500,300,200,700,100};
+        L2.put("video1","Video Data");
 
-        int target = 500;
+        getVideo("video1");
+        getVideo("video1");
+    }
 
-        HashMap<Integer,Integer> map = new HashMap<>();
+    static void getVideo(String id){
 
-        for(int i=0;i<transactions.length;i++){
+        if(L1.containsKey(id)){
 
-            int complement = target-transactions[i];
-
-            if(map.containsKey(complement)){
-
-                System.out.println("Fraud pair found:");
-                System.out.println(complement+" + "+transactions[i]);
-                return;
-            }
-
-            map.put(transactions[i],i);
+            System.out.println("L1 Cache HIT");
+            return;
         }
 
-        System.out.println("No pair found");
+        if(L2.containsKey(id)){
+
+            System.out.println("L2 Cache HIT → Promoting to L1");
+
+            L1.put(id,L2.get(id));
+            return;
+        }
+
+        System.out.println("Database access required");
     }
 }
