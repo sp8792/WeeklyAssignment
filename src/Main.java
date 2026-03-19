@@ -2,28 +2,25 @@ import java.util.*;
 
 public class Main {
 
-    static HashMap<String,Integer> requests = new HashMap<>();
-    static int limit = 5;
+    static HashMap<String,Integer> queries = new HashMap<>();
 
     public static void main(String[] args){
 
-        for(int i=1;i<=7;i++){
+        queries.put("java tutorial",100);
+        queries.put("javascript guide",90);
+        queries.put("java download",80);
 
-            checkRate("client1");
-        }
+        search("jav");
     }
 
-    static void checkRate(String client){
+    static void search(String prefix){
 
-        int count = requests.getOrDefault(client,0);
+        for(String query:queries.keySet()){
 
-        if(count<limit){
+            if(query.startsWith(prefix)){
 
-            requests.put(client,count+1);
-
-            System.out.println("Request allowed");
+                System.out.println(query+" ("+queries.get(query)+")");
+            }
         }
-        else{
-
-            System.out.println("Rate limit exceeded");
-        }
+    }
+}
