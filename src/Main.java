@@ -2,38 +2,28 @@ import java.util.*;
 
 public class Main {
 
-    static String[] parking = new String[10];
-
     public static void main(String[] args){
 
-        park("ABC123");
-        park("XYZ999");
-        park("CAR456");
+        int[] transactions = {500,300,200,700,100};
 
-        showParking();
-    }
+        int target = 500;
 
-    static void park(String plate){
+        HashMap<Integer,Integer> map = new HashMap<>();
 
-        int index = Math.abs(plate.hashCode()%parking.length);
+        for(int i=0;i<transactions.length;i++){
 
-        while(parking[index]!=null){
+            int complement = target-transactions[i];
 
-            index = (index+1)%parking.length;
+            if(map.containsKey(complement)){
+
+                System.out.println("Fraud pair found:");
+                System.out.println(complement+" + "+transactions[i]);
+                return;
+            }
+
+            map.put(transactions[i],i);
         }
 
-        parking[index] = plate;
-
-        System.out.println("Parked "+plate+" at spot "+index);
-    }
-
-    static void showParking(){
-
-        System.out.println("Parking Status:");
-
-        for(int i=0;i<parking.length;i++){
-
-            System.out.println(i+" → "+parking[i]);
-        }
+        System.out.println("No pair found");
     }
 }
