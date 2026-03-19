@@ -2,30 +2,28 @@ import java.util.*;
 
 public class Main {
 
-    static HashMap<String,Integer> pageViews = new HashMap<>();
+    static HashMap<String,Integer> requests = new HashMap<>();
+    static int limit = 5;
 
     public static void main(String[] args){
 
-        processEvent("/news");
-        processEvent("/sports");
-        processEvent("/news");
-        processEvent("/tech");
+        for(int i=1;i<=7;i++){
 
-        showDashboard();
-    }
-
-    static void processEvent(String page){
-
-        pageViews.put(page,pageViews.getOrDefault(page,0)+1);
-    }
-
-    static void showDashboard(){
-
-        System.out.println("Page Views:");
-
-        for(String page:pageViews.keySet()){
-
-            System.out.println(page+" → "+pageViews.get(page));
+            checkRate("client1");
         }
     }
-}
+
+    static void checkRate(String client){
+
+        int count = requests.getOrDefault(client,0);
+
+        if(count<limit){
+
+            requests.put(client,count+1);
+
+            System.out.println("Request allowed");
+        }
+        else{
+
+            System.out.println("Rate limit exceeded");
+        }
