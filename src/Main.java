@@ -1,32 +1,22 @@
-public class Problem3 {
+class Asset {
+    String name;
+    double returnRate;
+    double volatility;
 
-    static void mergeSort(int[] arr, int l, int r) {
-        if (l < r) {
-            int m = (l + r) / 2;
-            mergeSort(arr, l, m);
-            mergeSort(arr, m + 1, r);
-            merge(arr, l, m, r);
-        }
+    Asset(String name, double r, double v) {
+        this.name = name;
+        this.returnRate = r;
+        this.volatility = v;
     }
 
-    static void merge(int[] arr, int l, int m, int r) {
-        int[] temp = new int[r - l + 1];
-        int i = l, j = m + 1, k = 0;
-
-        while (i <= m && j <= r) {
-            if (arr[i] <= arr[j]) temp[k++] = arr[i++];
-            else temp[k++] = arr[j++];
-        }
-
-        while (i <= m) temp[k++] = arr[i++];
-        while (j <= r) temp[k++] = arr[j++];
-
-        for (int x = 0; x < temp.length; x++) {
-            arr[l + x] = temp[x];
-        }
+    public String toString() {
+        return name + ":" + returnRate;
     }
+}
 
-    static void quickSort(int[] arr, int low, int high) {
+public class Problem4 {
+
+    static void quickSort(Asset[] arr, int low, int high) {
         if (low < high) {
             int pi = partition(arr, low, high);
             quickSort(arr, low, pi - 1);
@@ -34,20 +24,23 @@ public class Problem3 {
         }
     }
 
-    static int partition(int[] arr, int low, int high) {
-        int pivot = arr[high];
+    static int partition(Asset[] arr, int low, int high) {
+        Asset pivot = arr[high];
         int i = low - 1;
 
         for (int j = low; j < high; j++) {
-            if (arr[j] > pivot) {
+            if (arr[j].returnRate > pivot.returnRate ||
+                    (arr[j].returnRate == pivot.returnRate &&
+                     arr[j].volatility < pivot.volatility)) {
+
                 i++;
-                int temp = arr[i];
+                Asset temp = arr[i];
                 arr[i] = arr[j];
                 arr[j] = temp;
             }
         }
 
-        int temp = arr[i + 1];
+        Asset temp = arr[i + 1];
         arr[i + 1] = arr[high];
         arr[high] = temp;
 
@@ -55,14 +48,14 @@ public class Problem3 {
     }
 
     public static void main(String[] args) {
-        int[] arr = {500, 100, 300};
-
-        mergeSort(arr, 0, arr.length - 1);
-        System.out.print("Merge Sort: ");
-        for (int x : arr) System.out.print(x + " ");
+        Asset[] arr = {
+                new Asset("AAPL", 12, 5),
+                new Asset("TSLA", 8, 7),
+                new Asset("GOOG", 15, 4)
+        };
 
         quickSort(arr, 0, arr.length - 1);
-        System.out.print("\nQuick Sort DESC: ");
-        for (int x : arr) System.out.print(x + " ");
+
+        for (Asset a : arr) System.out.println(a);
     }
 }
