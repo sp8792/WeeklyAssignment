@@ -1,61 +1,29 @@
-class Asset {
-    String name;
-    double returnRate;
-    double volatility;
+public class Problem5 {
 
-    Asset(String name, double r, double v) {
-        this.name = name;
-        this.returnRate = r;
-        this.volatility = v;
-    }
-
-    public String toString() {
-        return name + ":" + returnRate;
-    }
-}
-
-public class Problem4 {
-
-    static void quickSort(Asset[] arr, int low, int high) {
-        if (low < high) {
-            int pi = partition(arr, low, high);
-            quickSort(arr, low, pi - 1);
-            quickSort(arr, pi + 1, high);
+    static int linearSearch(String[] arr, String target) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i].equals(target)) return i;
         }
+        return -1;
     }
 
-    static int partition(Asset[] arr, int low, int high) {
-        Asset pivot = arr[high];
-        int i = low - 1;
+    static int binarySearch(String[] arr, String target) {
+        int low = 0, high = arr.length - 1;
 
-        for (int j = low; j < high; j++) {
-            if (arr[j].returnRate > pivot.returnRate ||
-                    (arr[j].returnRate == pivot.returnRate &&
-                     arr[j].volatility < pivot.volatility)) {
+        while (low <= high) {
+            int mid = (low + high) / 2;
 
-                i++;
-                Asset temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-            }
+            if (arr[mid].equals(target)) return mid;
+            else if (arr[mid].compareTo(target) < 0) low = mid + 1;
+            else high = mid - 1;
         }
-
-        Asset temp = arr[i + 1];
-        arr[i + 1] = arr[high];
-        arr[high] = temp;
-
-        return i + 1;
+        return -1;
     }
 
     public static void main(String[] args) {
-        Asset[] arr = {
-                new Asset("AAPL", 12, 5),
-                new Asset("TSLA", 8, 7),
-                new Asset("GOOG", 15, 4)
-        };
+        String[] arr = {"accA", "accB", "accB", "accC"};
 
-        quickSort(arr, 0, arr.length - 1);
-
-        for (Asset a : arr) System.out.println(a);
+        System.out.println("Linear: " + linearSearch(arr, "accB"));
+        System.out.println("Binary: " + binarySearch(arr, "accB"));
     }
 }
